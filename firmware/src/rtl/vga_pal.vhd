@@ -458,14 +458,13 @@ if (rising_edge(CLK)) then  -- если фронт тактового импул
 			HSYNC_VGA <= VGA_SSI;      -- строчные синхроимпульсы для VGA
 		else 
 			VSYNC_VGA <= KSI_IN;
-			HSYNC_VGA <= SSI_IN xor (not KSI_IN);
+			HSYNC_VGA <= SSI_IN;
 		end if;
   end if;
 end process;
 
 -- удвоение частоты с помощью задержанного сигнала
 VGA_RBGI_CLK <= CLK2;
-VGA_BLANK_O <= VGA_BLANK;
       
 --------------------------------------------------------------------------------
 --                      вывод RGBI на разъем VGA                      091024  --
@@ -476,11 +475,14 @@ begin
 	 if (EN = '1') then
 		 if (VGA_BLANK = '0') then 
 			RGB_O <= (others => '0');
+			VGA_BLANK_O <= '0';
 		 else 
 			RGB_O <= RD_REG;
+			VGA_BLANK_O <= '1';
 		 end if;
 	 else 
 		RGB_O <= RGB_IN;
+		VGA_BLANK_O <= SSI_IN and KSI_IN;
 	 end if;
   end if;
 end process;

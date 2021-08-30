@@ -45,12 +45,12 @@ port (
 	TV_SYNC 		: in std_logic := '0';
 	TV_nSYNC 	: out std_logic;
 	TV_nBLANK 	: out std_logic;
-	TV_SYNC_IN 	: in std_logic := '0';
-	TV_nSYNC_IN : out std_logic;
+	TV_nSYNC_IN : in std_logic := '0';
+	TV_SYNC_IN 	: out std_logic;
 	
 	-- VGA 
-	VGA_VGA_IN 	: in std_logic := '0';
-	VGA_nVGA_IN	: out std_logic;
+	VGA_nVGA_IN : in std_logic := '0';
+	VGA_VGA_IN	: out std_logic;
 	VGA_R 		: out std_logic_vector(7 downto 0);
 	VGA_G 		: out std_logic_vector(7 downto 0);
 	VGA_B 		: out std_logic_vector(7 downto 0);
@@ -89,7 +89,7 @@ port map (
 	SSI_IN 			=> not TV_HS,
 	CLK 				=> FRQ,
 	CLK2 				=> FRQx2,
-	EN 				=> '1',
+	EN 				=> not VGA_nVGA_IN,
 	DS80				=> '0',		
 	RGB_O(23 downto 16)	=> VGA_R,
 	RGB_O(15 downto 8)	=> VGA_G,
@@ -120,10 +120,9 @@ begin
 end process;
 
 TV_nSYNC <= not TV_SYNC;
---TV_nBLANK <= not TV_SYNC;
-TV_nSYNC_IN <= not TV_SYNC_IN;
+TV_SYNC_IN <= not TV_nSYNC_IN;
 	
 	-- VGA 
-VGA_nVGA_IN	<= not VGA_VGA_IN;
+VGA_VGA_IN	<= not VGA_nVGA_IN;
 	
 end rtl;
